@@ -1,0 +1,3 @@
+include "java-signature-antlr", "java-signature-parser-lib"
+
+rootProject.name = "java-signature-parser"
