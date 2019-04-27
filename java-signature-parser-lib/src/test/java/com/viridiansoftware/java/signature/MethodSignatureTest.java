@@ -60,15 +60,44 @@ public class MethodSignatureTest {
 
 		Assert.assertEquals("java/lang/String", SignatureUtils.toQualifiedSimpleName(
 				methodSignature.getReturnType().referenceTypeSignature().classTypeSignature()));
+
+		Assert.assertEquals("I", methodSignature.getMethodArgument(0).BaseType().getText());
+		Assert.assertEquals("Z", methodSignature.getMethodArgument(1).BaseType().getText());
 	}
 
 	@Test
 	public void testReturnObjectMethodWithGenerics() {
+		final MethodSignature methodSignature = new MethodSignature("(Ljava/lang/Object;TV;)Ljava/lang/List<TK;>;");
+		Assert.assertEquals(false, methodSignature.isVoidMethod());
+		Assert.assertEquals(0, methodSignature.getTotalTypeParameters());
+		Assert.assertEquals(2, methodSignature.getTotalMethodArguments());
+		Assert.assertEquals(0, methodSignature.getTotalThrowsSignatures());
 
+		Assert.assertEquals("java/lang/List", SignatureUtils.toQualifiedSimpleName(
+				methodSignature.getReturnType().referenceTypeSignature().classTypeSignature()));
+
+		Assert.assertEquals("java/lang/Object", SignatureUtils.toQualifiedSimpleName(
+				methodSignature.getMethodArgument(0).referenceTypeSignature().classTypeSignature()));
+		Assert.assertEquals("V", methodSignature.getMethodArgument(1).referenceTypeSignature().
+				typeVariableSignature().identifier().getText());
 	}
 
 	@Test
 	public void testReturnObjectMethodWithTypeParameters() {
+		final MethodSignature methodSignature = new MethodSignature("<E:Ljava/lang/Object;>([TE;)Ljava/lang/List<TE;>;");
+		Assert.assertEquals(false, methodSignature.isVoidMethod());
+		Assert.assertEquals(1, methodSignature.getTotalTypeParameters());
+		Assert.assertEquals(1, methodSignature.getTotalMethodArguments());
+		Assert.assertEquals(0, methodSignature.getTotalThrowsSignatures());
 
+		Assert.assertEquals("java/lang/List", SignatureUtils.toQualifiedSimpleName(
+				methodSignature.getReturnType().referenceTypeSignature().classTypeSignature()));
+
+		Assert.assertEquals("E", methodSignature.getMethodArgument(0).referenceTypeSignature().
+				arrayTypeSignature().javaTypeSignature().referenceTypeSignature().typeVariableSignature().identifier().getText());
+
+		Assert.assertEquals("E", methodSignature.getTypeParameter(0).identifier().getText());
+		Assert.assertEquals("java/lang/Object", SignatureUtils.toQualifiedSimpleName(
+				methodSignature.getTypeParameter(0).classBound().referenceTypeSignature().classTypeSignature()));
 	}
 }
