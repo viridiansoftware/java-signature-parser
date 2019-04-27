@@ -3,6 +3,8 @@ build/
 bin/
 .idea/
 
+java-signature-parser-lib/src/main/java/com/viridiansoftware/java/signature/antlr/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
