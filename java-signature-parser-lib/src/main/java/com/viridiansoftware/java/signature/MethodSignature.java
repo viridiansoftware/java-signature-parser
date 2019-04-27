@@ -22,25 +22,48 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-public class ClassSignature extends SignatureBaseListener {
-	private SignatureParser.ClassSignatureContext signatureContext;
+public class MethodSignature extends SignatureBaseListener {
+	private SignatureParser.MethodSignatureContext signatureContext;
 
-	public ClassSignature(String signature) {
+	public MethodSignature(String signature) {
 		if(signature == null || signature.isEmpty()) {
 			return;
 		}
 		final SignatureLexer lexer = new SignatureLexer(CharStreams.fromString(signature));
 		final SignatureParser parser = new SignatureParser(new BufferedTokenStream(lexer));
 
-		final SignatureParser.ClassSignatureContext context = parser.classSignature();
+		final SignatureParser.MethodSignatureContext context = parser.methodSignature();
 		final ParseTreeWalker parseTreeWalker = new ParseTreeWalker();
 
 		parseTreeWalker.walk(this, context);
 	}
 
-	@Override
-	public void exitClassSignature(SignatureParser.ClassSignatureContext ctx) {
-		signatureContext = ctx;
+	public boolean isVoidMethod() {
+		return signatureContext.result().javaTypeSignature() == null;
+	}
+
+	public SignatureParser.JavaTypeSignatureContext getReturnType() {
+		return signatureContext.result().javaTypeSignature();
+	}
+
+	public int getTotalThrowsSignatures() {
+		if(signatureContext == null) {
+			return 0;
+		}
+		if(signatureContext.throwsSignature() == null) {
+			return 0;
+		}
+		return signatureContext.throwsSignature().size();
+	}
+
+	public SignatureParser.ThrowsSignatureContext getThrowsSignature(int i) {
+		if(signatureContext == null) {
+			return null;
+		}
+		if(signatureContext.throwsSignature() == null) {
+			return null;
+		}
+		return signatureContext.throwsSignature().get(i);
 	}
 
 	public int getTotalTypeParameters() {
@@ -57,31 +80,44 @@ public class ClassSignature extends SignatureBaseListener {
 	}
 
 	public SignatureParser.TypeParameterContext getTypeParameter(int i) {
-		return signatureContext.typeParameters().typeParameter(i);
-	}
-
-	public SignatureParser.SuperclassSignatureContext getSuperclass() {
 		if(signatureContext == null) {
 			return null;
 		}
-		return signatureContext.superclassSignature();
+		if(signatureContext.typeParameters() == null) {
+			return null;
+		}
+		if(signatureContext.typeParameters().typeParameter() == null) {
+			return null;
+		}
+		return signatureContext.typeParameters().typeParameter(i);
 	}
 
-	public int getTotalSuperinterfaces() {
+	public int getTotalMethodArguments() {
 		if(signatureContext == null) {
 			return 0;
 		}
-		if(signatureContext.superinterfaceSignature() == null) {
+		if(signatureContext.javaTypeSignature() == null) {
 			return 0;
 		}
-		return signatureContext.superinterfaceSignature().size();
+		return signatureContext.javaTypeSignature().size();
 	}
 
-	public SignatureParser.SuperinterfaceSignatureContext getSuperinterface(int i) {
-		return signatureContext.superinterfaceSignature(i);
+	public SignatureParser.JavaTypeSignatureContext getMethodArgument(int i) {
+		if(signatureContext == null) {
+			return null;
+		}
+		if(signatureContext.javaTypeSignature() == null) {
+			return null;
+		}
+		return signatureContext.javaTypeSignature().get(i);
 	}
 
-	public SignatureParser.ClassSignatureContext getSignatureContext() {
+	@Override
+	public void exitMethodSignature(SignatureParser.MethodSignatureContext ctx) {
+		signatureContext = ctx;
+	}
+
+	public SignatureParser.MethodSignatureContext getSignatureContext() {
 		return signatureContext;
 	}
 }

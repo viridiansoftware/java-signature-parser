@@ -2,6 +2,7 @@
 build/
 bin/
 .idea/
+out/
 
 java-signature-parser-lib/src/main/java/com/viridiansoftware/java/signature/antlr/
 

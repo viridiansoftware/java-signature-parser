@@ -18,86 +18,86 @@ grammar Signature;
 
 //------------ Class Signature ------------
 classSignature
-    : TypeParameters? SuperclassSignature SuperinterfaceSignature*
+    : typeParameters? superclassSignature superinterfaceSignature*
     ;
 
-TypeParameters
-    : '<' TypeParameter+ '>'
+typeParameters
+    : LT typeParameter+ GT
     ;
 
-TypeParameter
-    : Identifier ClassBound InterfaceBound*
+typeParameter
+    : identifier classBound interfaceBounds?
     ;
 
-ClassBound
-    : ':' ReferenceTypeSignature?
+classBound
+    : COLON referenceTypeSignature?
     ;
 
-InterfaceBound
-    : ':' ReferenceTypeSignature
+interfaceBounds
+    : interfaceBound+
     ;
 
-SuperclassSignature
-    : ClassTypeSignature;
+interfaceBound
+    : COLON referenceTypeSignature
+    ;
 
-SuperinterfaceSignature
-    : ClassTypeSignature;
+superclassSignature
+    : classTypeSignature;
+
+superinterfaceSignature
+    : classTypeSignature;
 
 //------------ Method Signature ------------
 methodSignature
-    : TypeParameters? '(' JavaTypeSignature* ')' Result ThrowsSignature*
+    : typeParameters? LEFTROUNDBRACKET javaTypeSignature* RIGHTROUNDBRACKET result throwsSignature*
     ;
 
-Result
-    : JavaTypeSignature
+result
+    : javaTypeSignature
     | VoidDescriptor
     ;
 
-ThrowsSignature
-    : '^' ClassTypeSignature
-    | '^' TypeVariableSignature
-    ;
-
-VoidDescriptor
-    : 'V'
+throwsSignature
+    : CARET classTypeSignature
+    | CARET typeVariableSignature
     ;
 
 //------------ Field Signature ------------
 fieldSignature
-    : ReferenceTypeSignature
+    : referenceTypeSignature
     ;
 
 //------------ Type Signatures ------------
-JavaTypeSignature
-    : ReferenceTypeSignature
+javaTypeSignature
+    : referenceTypeSignature
     | BaseType
     ;
 
-ReferenceTypeSignature
-    : ClassTypeSignature
-    | TypeVariableSignature
-    | ArrayTypeSignature
+referenceTypeSignature
+    : classTypeSignature
+    | typeVariableSignature
+    | arrayTypeSignature
     ;
 
-ClassTypeSignature
-    : 'L' PackageSpecifier? SimpleClassTypeSignature ClassTypeSignatureSuffix* ';'
+classTypeSignature
+    : ObjectType packageSpecifier? simpleClassTypeSignature classTypeSignatureSuffix* SEMICOLON
     ;
 
-PackageSpecifier
-    : Identifier '/' PackageSpecifier*
+packageSpecifier
+    : identifier FORWARDSLASH packageSpecifier*
     ;
 
-SimpleClassTypeSignature
-    : Identifier TypeArguments?
+simpleClassTypeSignature
+    : identifier typeArguments?
     ;
 
-TypeArguments
-    : '<' TypeArgument+ '>'
+typeArguments
+    : LT typeArgument+ GT
     ;
 
-TypeArgument
-    : '*'
-    | WildcardIndicator? ReferenceTypeSignature
+typeArgument
+    : ASTERISK
+    | WildcardIndicator? referenceTypeSignature
     ;
 
 WildcardIndicator
@@ -105,50 +105,52 @@ WildcardIndicator
     | SUPERWILDCARD
     ;
 
-ClassTypeSignatureSuffix
-    : '.' SimpleClassTypeSignature
+classTypeSignatureSuffix
+    : FULLSTOP simpleClassTypeSignature
     ;
 
-TypeVariableSignature
-    : 'T' Identifier ';'
+typeVariableSignature
+    : TypeIndicator identifier SEMICOLON
     ;
 
-ArrayTypeSignature
-    : 'L' JavaTypeSignature
+arrayTypeSignature
+    : LEFTBOXBRACKET javaTypeSignature
+    ;
+
+LT : '<';
+GT : '>';
+ASTERISK : '*';
+EXTENDSWILDCARD : '+';
+SUPERWILDCARD : '-';
+LEFTBOXBRACKET : '[';
+LEFTROUNDBRACKET : '(';
+RIGHTROUNDBRACKET : ')';
+COLON : ':';
+SEMICOLON : ';';
+FULLSTOP : '.';
+FORWARDSLASH : '/';
+CARET : '^';
+
+identifier
+	:	(JavaLetterOrDigit | TypeIndicator | ObjectType | BaseType | VoidDescriptor)+
+	;
+
+TypeIndicator
+    : 'T'
+    ;
+
+ObjectType
+    : 'L'
     ;
 
 BaseType
-    : 'B'
-    | 'C'
-    | 'D'
-    | 'F'
-    | 'I'
-    | 'J'
-    | 'S'
-    | 'Z'
+    : [BCDFIJSZ]
     ;
 
-EXTENDSWILDCARD : '+';
-SUPERWILDCARD : '-';
-LEFTBRACKET : '[';
-SEMICOLON : ';';
+VoidDescriptor
+    : 'V'
+    ;
 
-Identifier
-	:	JavaLetter JavaLetterOrDigit*
-	;
-
-fragment
-JavaLetter
-	:	[a-zA-Z$_] // these are the "java letters" below 0x7F
-	|	// covers all characters above 0x7F which are not a surrogate
-		~[\u0000-\u007F\uD800-\uDBFF]
-		{Character.isJavaIdentifierStart(_input.LA(-1))}?
-	|	// covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
-		[\uD800-\uDBFF] [\uDC00-\uDFFF]
-		{Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
-	;
-
-fragment
 JavaLetterOrDigit
 	:	[a-zA-Z0-9$_] // these are the "java letters or digits" below 0x7F
 	|	// covers all characters above 0x7F which are not a surrogate
