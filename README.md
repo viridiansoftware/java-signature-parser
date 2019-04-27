@@ -1,5 +1,9 @@
 # java-signature-parser
-ANTLR Grammer for parsing Java signatures
+ANTLR Grammer for parsing Java signatures per JVM specification
+
+## Specification
+
+Specification can be found in [section 4.7.9.1](https://docs.oracle.com/javase/specs/jvms/se11/html/jvms-4.html#jvms-4.7.9.1)
 
 ## Usage
 
