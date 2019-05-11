@@ -100,4 +100,13 @@ public class MethodSignatureTest {
 		Assert.assertEquals("java/lang/Object", SignatureUtils.toQualifiedSimpleName(
 				methodSignature.getTypeParameter(0).classBound().referenceTypeSignature().classTypeSignature()));
 	}
+
+	@Test
+	public void testComplexSignature() {
+		final MethodSignature methodSignature = new MethodSignature("<T::Ljava/lang/Comparable<-TT;>;>([TT;)V");
+		Assert.assertEquals(true, methodSignature.isVoidMethod());
+		Assert.assertEquals(1, methodSignature.getTotalTypeParameters());
+		Assert.assertEquals(1, methodSignature.getTotalMethodArguments());
+		Assert.assertEquals(0, methodSignature.getTotalThrowsSignatures());
+	}
 }
