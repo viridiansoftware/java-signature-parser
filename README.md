@@ -9,7 +9,7 @@ Specification can be found in [section 4.7.9.1](https://docs.oracle.com/javase/s
 
 __Gradle__
 ```gradle
-compile "com.viridiansoftware:java-signature-parser-lib:1.0.0"
+compile "com.viridiansoftware:java-signature-parser-lib:1.0.1"
 ```
 
 __Maven__
@@ -17,6 +17,6 @@ __Maven__
 <dependency>
     <groupId>com.viridiansoftware</groupId>
     <artifactId>java-signature-parser-lib</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
