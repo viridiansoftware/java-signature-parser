@@ -22,10 +22,19 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.util.Objects;
+
 public class FieldSignature extends SignatureBaseListener {
+	private final String signature;
 	private SignatureParser.FieldSignatureContext signatureContext;
 
 	public FieldSignature(String signature) {
+		this.signature = signature;
+
+		if(signature == null || signature.isEmpty()) {
+			return;
+		}
+
 		final SignatureLexer lexer = new SignatureLexer(CharStreams.fromString(signature));
 		final SignatureParser parser = new SignatureParser(new BufferedTokenStream(lexer));
 
@@ -42,5 +51,18 @@ public class FieldSignature extends SignatureBaseListener {
 
 	public SignatureParser.FieldSignatureContext getSignatureContext() {
 		return signatureContext;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof FieldSignature)) return false;
+		FieldSignature that = (FieldSignature) o;
+		return Objects.equals(signature, that.signature);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(signature);
 	}
 }

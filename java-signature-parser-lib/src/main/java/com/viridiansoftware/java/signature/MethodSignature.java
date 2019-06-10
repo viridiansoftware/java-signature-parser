@@ -22,10 +22,14 @@ import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import java.util.Objects;
+
 public class MethodSignature extends SignatureBaseListener {
+	private final String signature;
 	private SignatureParser.MethodSignatureContext signatureContext;
 
 	public MethodSignature(String signature) {
+		this.signature = signature;
 		if(signature == null || signature.isEmpty()) {
 			return;
 		}
@@ -119,5 +123,18 @@ public class MethodSignature extends SignatureBaseListener {
 
 	public SignatureParser.MethodSignatureContext getSignatureContext() {
 		return signatureContext;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof MethodSignature)) return false;
+		MethodSignature that = (MethodSignature) o;
+		return Objects.equals(signature, that.signature);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(signature);
 	}
 }

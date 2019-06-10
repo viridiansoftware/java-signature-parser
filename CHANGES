@@ -1,0 +1,5 @@
+[1.0.1]
+- Fix .equals() not matching the same signature
+
+[1.0.0]
+- Initial release
