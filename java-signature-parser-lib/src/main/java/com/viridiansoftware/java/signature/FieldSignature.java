@@ -53,6 +53,10 @@ public class FieldSignature extends SignatureBaseListener {
 		return signatureContext;
 	}
 
+	public String getSignatureString() {
+		return signature;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

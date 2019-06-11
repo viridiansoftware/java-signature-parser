@@ -1,3 +1,6 @@
+[1.0.2]
+- Added method to access original signature string
+
 [1.0.1]
 - Fix .equals() not matching the same signature
 
